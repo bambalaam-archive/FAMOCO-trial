@@ -74,13 +74,18 @@ class ApksUpload(APIView):
 
 		command = "aapt dump badging " + destination
 
-		output = subprocess.check_output(command, shell=True)
+		output = subprocess.check_output(command, shell=True).decode("utf-8")
 		start = output.find("application: label")
 		end = output.find("\n", start)
-		elements = output[start:end].split(" ")
+		correct_line = output[start:end]
+		start_label = correct_line.find("label=")
+		end_label = correct_line.find("icon",start_label)
+
+		app_label = correct_line[start_label+7:end_label-2]
 		
-		app_label = elements[1].split("=")[1].replace("'","")
-		app_chosen_icon = elements[2].split("=")[1].replace("/","_").replace("'","")
+		start_icon = correct_line.find("icon=")
+
+		app_chosen_icon = correct_line[start_icon+6:-1].replace("/","_")
 		print(app_chosen_icon)
 
 		apkf.parse_icon(os.getcwd()+"/apks/icons")
