@@ -120,3 +120,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'PAGE_SIZE' : 50
+}
+
+DEFAULT_PARSER_CLASSES = [
+    'rest_framework.parses.FileUploadParser'
+]

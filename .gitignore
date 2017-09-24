@@ -99,3 +99,8 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+
+apks/files/*
+apks/icons/*
+apks/migrations/*
