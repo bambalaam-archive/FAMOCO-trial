@@ -18,7 +18,7 @@ from apks.serializers import APKsSerializer
 
 from apk_parse import apk
 import os
-
+import subprocess
 
 # Create your views here.
 
@@ -71,28 +71,36 @@ class ApksUpload(APIView):
 		destination_file.close()
 
 		# Extracting data from APK
-		print(apkf.package)
+
+		command = "aapt dump badging " + destination
+
+		output = subprocess.check_output(command, shell=True)
+		start = output.find("application: label")
+		end = output.find("\n", start)
+		elements = output[start:end].split(" ")
+		
+		app_label = elements[1].split("=")[1].replace("'","")
+		app_chosen_icon = elements[2].split("=")[1].replace("/","_").replace("'","")
+		print(app_chosen_icon)
+
 		apkf.parse_icon(os.getcwd()+"/apks/icons")
 
-		icon_path = os.getcwd()+"/apks/icons/"+apkf.package+"/res_drawable-hdpi-v4_icon.png"
+		icon_path = os.getcwd()+"/apks/icons/"+apkf.package+"/"+app_chosen_icon
 
 		extracted_data = {}
 		extracted_data['apk_file'] = destination
 
-		print(destination)
-		print(icon_path)
-		extracted_data['date_upload'] = "2017-09-23T11:35:09Z"
 		extracted_data['version_name'] = apkf.get_androidversion_name()
 		extracted_data['version_code'] = apkf.get_androidversion_code()
 		extracted_data['icon'] = icon_path
-		extracted_data["app_label"] = "NAME"
+		extracted_data["app_label"] = app_label
 		extracted_data["app_name"] = apkf.package
 
 		# Saving APK
 		serializer = APKsSerializer(data=extracted_data)
 		if serializer.is_valid():
 			serializer.save()
-			return Response(apkf.package, status.HTTP_201_CREATED)
+			return Response(app_label + " has been added to the website.", status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 		
 

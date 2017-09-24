@@ -6,6 +6,9 @@
 (enter a virtualenv, if you want to, before this step)
 (sudo) apt install python-m2crypto appt
 pip install -r requirements.txt
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
 ```
 
 ## Running server
@@ -54,3 +57,8 @@ This is the preferred method, others are possible though.
 curl http://127.0.0.1:8000/apks/api/upload/ --upload-file <path-to-file>
 ```
 
+
+
+## TO DO
+
+- Remove extra images gathered
