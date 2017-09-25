@@ -12,7 +12,6 @@ COPY . /code/
 RUN pip install -U pip
 RUN pip install -Ur requirements.txt
 
-RUN python /code/manage.py collectstatic --noinput
 RUN python /code/manage.py makemigrations apks
 RUN python /code/manage.py migrate
 RUN python /code/manage.py runserver
