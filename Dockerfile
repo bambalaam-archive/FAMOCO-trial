@@ -14,4 +14,3 @@ RUN pip install -Ur requirements.txt
 
 RUN python /code/manage.py makemigrations apks
 RUN python /code/manage.py migrate
-RUN python /code/manage.py runserver
