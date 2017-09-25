@@ -72,6 +72,13 @@ class ApksUpload(APIView):
     parser_classes = (FileUploadParser,)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly,)
+    cwd = os.getcwd()
+
+    def get_apk_icons_and_path(self, apk_file, chosen_icon_filename):
+        apk_file.parse_icon(self.cwd + "/apks/icons")
+        icon_path = self.cwd + "/apks/icons/"
+        icon_path += apk_file.package + "/" + chosen_icon_filename
+        return icon_path
 
     def put(self, request, filename, format=None):
         # Setting up APK to be treated
@@ -79,7 +86,7 @@ class ApksUpload(APIView):
         apkf = apk.APK(up_file.temporary_file_path())
 
         # Saving file to directory
-        destination = os.getcwd() + "/apks/files/" + filename
+        destination = self.cwd + "/apks/files/" + filename
         destination_file = open(destination, 'wb+')
         for chunk in up_file.chunks():
             destination_file.write(chunk)
@@ -99,9 +106,7 @@ class ApksUpload(APIView):
 
         start_icon = correct_line.find("icon=")
         app_chosen_icon = correct_line[start_icon + 6:-1].replace("/", "_")
-
-        apkf.parse_icon(os.getcwd() + "/apks/icons")
-        icon_path = os.getcwd() + "/apks/icons/" + apkf.package + "/" + app_chosen_icon
+        icon_path = self.get_apk_icons_and_path(apkf, app_chosen_icon)
 
         extracted_data = {}
         extracted_data['apk_file'] = destination
@@ -110,12 +115,11 @@ class ApksUpload(APIView):
         extracted_data['icon'] = icon_path
         extracted_data["app_label"] = app_label
         extracted_data["app_name"] = apkf.package
-        extracted_data["uploader"] = request.user.id
 
         # Saving APK
         serializer = APKsSerializer(data=extracted_data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(uploader=request.user)
             return Response(app_label + " has been added to the website.",
                             status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
