@@ -14,4 +14,4 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the uploader of the apk.
-        return obj.uploader == request.user
+        return obj.uploader == request.user or request.user.is_superuser

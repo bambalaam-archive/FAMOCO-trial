@@ -12,8 +12,8 @@ class APK(models.Model):
     class Meta:
         ordering = ('date_upload',)
 
-    app_name = models.CharField(max_length=200)
     app_label = models.CharField(max_length=200)
+    app_name = models.CharField(max_length=200)
     version_name = models.CharField(max_length=200)
     version_code = models.CharField(max_length=200)
     icon = models.FilePathField(path=os.getcwd() + '/apks/icons/',
@@ -25,4 +25,4 @@ class APK(models.Model):
                                  on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.app_name
+        return self.app_label
