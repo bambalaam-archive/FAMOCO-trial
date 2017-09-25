@@ -122,7 +122,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
-    'PAGE_SIZE' : 50
+    'PAGE_SIZE': 50
 }
 
 DEFAULT_PARSER_CLASSES = [

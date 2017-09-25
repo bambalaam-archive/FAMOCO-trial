@@ -1,6 +1,6 @@
-Django
+django
 pillow
-apk_parse_ph4
 djangorestframework
+apk_parse_ph4
 markdown
 django-filter
