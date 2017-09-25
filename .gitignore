@@ -104,3 +104,4 @@ ENV/
 apks/files/*
 apks/icons/*
 apks/migrations/*
+db.sqlite3

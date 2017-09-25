@@ -4,4 +4,3 @@ apk_parse_ph4
 djangorestframework
 markdown
 django-filter
-xmltodict
