@@ -56,7 +56,7 @@ ROOT_URLCONF = 'APKsite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['./templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -137,3 +137,5 @@ DEFAULT_PARSER_CLASSES = [
 ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda u: "/apks/user-list/%s/" % u.id,
 }
+
+LOGIN_REDIRECT_URL = '/'
