@@ -10,6 +10,7 @@
   <p><strong>Version Name: </strong> {{ apk.version_name }}</p>
   <p><strong>Version Code: </strong> {{ apk.version_code }}</p> 
   <p><strong>Date Uploaded: </strong> {{ apk.date_upload }}</p>  
-  <p><strong>Uploader: </strong> <a href="{{apk.uploader.get_absolute_url}}"> {{ apk.uploader }}</p> 
+  <p><strong>Uploader: </strong> <a href="{{apk.uploader.get_absolute_url}}"> {{ apk.uploader }}</a></p> 
+  <p><strong>Download: </strong> <a href="{% get_media_prefix %}{{ apk.apk_file }}"> Link </a></p>
 
 {% endblock %}

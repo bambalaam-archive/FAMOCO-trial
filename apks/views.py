@@ -32,7 +32,7 @@ class ApkDetailView(generic.DetailView):
         try:
             apk_id = APK.objects.get(pk=pk)
         except APK.DoesNotExist:
-            raise Http404("Book does not exist")
+            raise Http404("APK does not exist")
 
         return render(request, self.template_name,
                       context={'apk': apk_id, })
@@ -53,7 +53,7 @@ class UserDetailView(generic.DetailView):
         try:
             user_id = User.objects.get(pk=pk)
         except User.DoesNotExist:
-            raise Http404("Book does not exist")
+            raise Http404("User does not exist")
 
         return render(request, self.template_name,
                       context={'user': user_id, })

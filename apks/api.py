@@ -121,6 +121,10 @@ class ApksUpload(APIView):
         start_icon = correct_line.find("icon=")
         chosen_icon = correct_line[start_icon + 6:-1].replace("/", "_")
 
+        """os.rename(up_file.temporary_file_path(),
+                  os.path.dirname(up_file.temporary_file_path()) +
+                  app_label + ".apk")"""
+
         extracted_data = {}
         extracted_data['version_name'] = apkf.get_androidversion_name()
         extracted_data['version_code'] = apkf.get_androidversion_code()

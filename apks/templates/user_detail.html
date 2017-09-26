@@ -11,7 +11,10 @@
 	<p><strong>Username: </strong>{{ user.username }}</p>
 
 	<p><strong>Uploads: </strong></p>
-
-		{{ user.apks }}
+	
+	{% for apk in user.apks.all %}
+        <p><a href="{{ apk.get_absolute_url }}"><img src="{% get_media_prefix %}{{apk.app_label|replace_spaces}}/icon.png" %}" alt="My image"/ style="max-height: 50px; max-width: 50px;" ></a>
+        {{ apk.app_label}}</p>
+	{% endfor %}
 
 {% endblock %}
