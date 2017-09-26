@@ -19,6 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from . import views
+from apks.views import signup
 
 
 urlpatterns = [
@@ -30,6 +31,7 @@ urlpatterns = [
 # Add Django site authentication urls (for login, logout, password management)
 urlpatterns += [
     url(r'^accounts/', include('django.contrib.auth.urls')),
+    url(r'^accounts/signup/', signup, name='register')
 ]
 
 

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.shortcuts import render
-
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.http import Http404
-from apks.models import APK
-
+from django.contrib.auth import login, authenticate
 from django.views import generic
+from apks.models import APK
+from apks.forms import SignUpForm
 
 
 def index(request):
@@ -15,6 +15,21 @@ def index(request):
                   context={'num_apks': len(APK.objects.all()),
                            'num_users': len(User.objects.all())}
                   )
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('/')
+    else:
+        form = SignUpForm()
+    return render(request, 'registration/signup.html', {'form': form})
 
 
 class ApkListView(generic.ListView):
@@ -57,3 +72,4 @@ class UserDetailView(generic.DetailView):
 
         return render(request, self.template_name,
                       context={'user': user_id, })
+

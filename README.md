@@ -16,6 +16,13 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
+## Exploring the website
+
+The very basic and barebones website is available at:
+
+```
+http://127.0.0.1:8000
+```
 
 ## API Calls
 
