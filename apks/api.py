@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.http import Http404
 from django.contrib.auth.models import User
+from django.core.files import File
 from rest_framework import status, generics, permissions
 from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view
@@ -17,6 +18,7 @@ from apks.permissions import IsOwnerOrReadOnly
 from apk_parse import apk
 import os
 import subprocess
+import shutil
 
 
 @api_view(['GET'])
@@ -74,10 +76,29 @@ class ApksUpload(APIView):
                           IsOwnerOrReadOnly,)
     cwd = os.getcwd()
 
-    def get_apk_icons_and_path(self, apk_file, chosen_icon_filename):
-        apk_file.parse_icon(self.cwd + "/apks/icons")
-        icon_path = self.cwd + "/apks/icons/"
-        icon_path += apk_file.package + "/" + chosen_icon_filename
+    def get_apk_icons_and_path(self, apk_file, app_label, icon_filename):
+        apk_file.parse_icon(self.cwd + "/apks/media/")
+        icons_dir_path = self.cwd + "/apks/media/"
+        fixed_app_label = app_label.replace(" ", "_")
+        try:
+            os.rename(icons_dir_path + apk_file.package,
+                      icons_dir_path + fixed_app_label)
+        except Exception:
+            shutil.rmtree(icons_dir_path + fixed_app_label)
+            os.rename(icons_dir_path + apk_file.package,
+                      icons_dir_path + fixed_app_label)
+
+        files_in_dir = os.listdir(icons_dir_path + fixed_app_label)
+
+        for file in files_in_dir:
+            if file != icon_filename:
+                os.remove(icons_dir_path + fixed_app_label + "/" + file)
+
+        os.rename(icons_dir_path + fixed_app_label + "/" + icon_filename,
+                  icons_dir_path + fixed_app_label + "/icon.png")
+
+        icon_path = icons_dir_path + fixed_app_label + "/icon.png"
+
         return icon_path
 
     def put(self, request, filename, format=None):
@@ -85,15 +106,8 @@ class ApksUpload(APIView):
         up_file = request.data['file']
         apkf = apk.APK(up_file.temporary_file_path())
 
-        # Saving file to directory
-        destination = self.cwd + "/apks/files/" + filename
-        destination_file = open(destination, 'wb+')
-        for chunk in up_file.chunks():
-            destination_file.write(chunk)
-        destination_file.close()
-
         # Extracting data from APK
-        command = "aapt dump badging " + destination
+        command = "aapt dump badging " + up_file.temporary_file_path()
 
         output = subprocess.check_output(command, shell=True).decode("utf-8")
         start = output.find("application: label")
@@ -105,19 +119,23 @@ class ApksUpload(APIView):
         app_label = correct_line[start_label + 7:end_label - 2]
 
         start_icon = correct_line.find("icon=")
-        app_chosen_icon = correct_line[start_icon + 6:-1].replace("/", "_")
-        icon_path = self.get_apk_icons_and_path(apkf, app_chosen_icon)
+        chosen_icon = correct_line[start_icon + 6:-1].replace("/", "_")
 
         extracted_data = {}
-        extracted_data['apk_file'] = destination
         extracted_data['version_name'] = apkf.get_androidversion_name()
         extracted_data['version_code'] = apkf.get_androidversion_code()
-        extracted_data['icon'] = icon_path
         extracted_data["app_label"] = app_label
         extracted_data["app_name"] = apkf.package
+        extracted_data['apk_file'] = up_file
+
+        icon_path = self.get_apk_icons_and_path(apkf, app_label, chosen_icon)
+        reopen = open(icon_path, 'r')
+        dj_file = File(reopen)
+        extracted_data['icon'] = dj_file
 
         # Saving APK
         serializer = APKsSerializer(data=extracted_data)
+
         if serializer.is_valid():
             serializer.save(uploader=request.user)
             return Response(app_label + " has been added to the website.",

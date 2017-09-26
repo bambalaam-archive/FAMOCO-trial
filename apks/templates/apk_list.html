@@ -1,0 +1,24 @@
+{% extends "base_generic.html" %}
+
+{% load static %}
+{% load replace_spaces %}
+
+
+{% block content %}
+    <h1>APKs List</h1>
+
+    {% if view_apks%}
+    <ul>
+
+      {% for apk in view_apks %}
+      <li>
+        <a href="{{ apk.get_absolute_url }}"><img src="{% get_media_prefix %}{{apk.app_label|replace_spaces}}/icon.png" %}" alt="My image"/ style="max-height: 50px; max-width: 50px;" ></a>
+        {{ apk.app_label}}
+      </li>
+      {% endfor %}
+
+    </ul>
+    {% else %}
+      <p>There are no APKs on the website yet .</p>
+    {% endif %}       
+{% endblock %}

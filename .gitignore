@@ -101,7 +101,6 @@ ENV/
 .mypy_cache/
 
 
-apks/files/*
-apks/icons/*
+apks/media/*
 apks/migrations/*
 db.sqlite3

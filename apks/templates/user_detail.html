@@ -1,0 +1,17 @@
+
+{% extends "base_generic.html" %}
+
+{% load static %}
+{% load replace_spaces %}
+
+{% block content %}
+
+	<h1>User Profile</h1>
+
+	<p><strong>Username: </strong>{{ user.username }}</p>
+
+	<p><strong>Uploads: </strong></p>
+
+		{{ user.apks }}
+
+{% endblock %}

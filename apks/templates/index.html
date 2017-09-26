@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>APK Indexer</h1>
+
+  <p>Welcome to <em>APK Indexer</em>, a very basic Django website developed as a technical test for FAMOCO.</p>
+
+<h2>Dynamic content</h2>
+
+  <p>The website has the following record counts:</p>
+  <ul>
+    <li><strong>APKs:</strong> {{ num_apks }}</li>
+    <li><strong>Users:</strong> {{ num_users }}</li>
+  </ul>
+
+{% endblock %}

@@ -119,4 +119,4 @@ curl http://127.0.0.1:8000/apks/api/users/<index>/
 
 ## TO DO
 
-- Remove extra images that are gathered
+- Remove extra images that are generated

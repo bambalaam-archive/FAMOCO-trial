@@ -4,7 +4,17 @@ from . import api
 
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.index,
+        name='index'),
+    url(r'^apk-list/$', views.ApkListView.as_view(),
+        name='view-apks'),
+    url(r'^apk-list/(?P<pk>\d+)/$', views.ApkDetailView.as_view(),
+        name='view-apks-detail'),
+    url(r'^user-list/$', views.UserListView.as_view(),
+        name='view-users'),
+    url(r'^user-list/(?P<pk>\d+)/$', views.UserDetailView.as_view(),
+        name='view-users-detail'),
+
     url(r'^api/$', api.api_root),
     url(r'^api/login/', include('rest_framework.urls',
         namespace='rest_framework')),

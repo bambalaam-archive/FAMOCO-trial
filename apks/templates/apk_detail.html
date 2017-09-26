@@ -1,0 +1,15 @@
+{% extends "base_generic.html" %}
+
+{% load static %}
+{% load replace_spaces %}
+
+{% block content %}
+  <h1><img src="{% get_media_prefix %}{{apk.app_label|replace_spaces}}/icon.png" %}" alt="My image"/> {{ apk.app_label }}</h1>
+
+  <p><strong>App Name: </strong>{{ apk.app_name }}</p>
+  <p><strong>Version Name: </strong> {{ apk.version_name }}</p>
+  <p><strong>Version Code: </strong> {{ apk.version_code }}</p> 
+  <p><strong>Date Uploaded: </strong> {{ apk.date_upload }}</p>  
+  <p><strong>Uploader: </strong> <a href="{{apk.uploader.get_absolute_url}}"> {{ apk.uploader }}</p> 
+
+{% endblock %}

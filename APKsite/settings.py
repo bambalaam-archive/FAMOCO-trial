@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'd99(=_==(2au6ofb@e&wm(9_lmi5()clj7x))^32ed8tv3isnd'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -121,6 +121,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_ROOT = 'apks/media/'
+
+MEDIA_URL = '/media/'
+
 REST_FRAMEWORK = {
     'PAGE_SIZE': 50
 }
@@ -128,3 +132,8 @@ REST_FRAMEWORK = {
 DEFAULT_PARSER_CLASSES = [
     'rest_framework.parses.FileUploadParser'
 ]
+
+
+ABSOLUTE_URL_OVERRIDES = {
+    'auth.user': lambda u: "/apks/user-list/%s/" % u.id,
+}

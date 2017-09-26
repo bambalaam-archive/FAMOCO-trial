@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+
+{% load static %}
+
+
+{% block content %}
+    <h1>Users List</h1>
+
+    {% if view_users%}
+    <ul>
+
+      {% for user in view_users %}
+      <li>
+        <a href="{{ user.get_absolute_url }}"> {{ user.username }}
+      </li>
+      {% endfor %}
+
+    </ul>
+    {% else %}
+      <p>There are no Users on the website yet .</p>
+    {% endif %}       
+{% endblock %}
